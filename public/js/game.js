@@ -5,7 +5,6 @@ let userList = [];
 let user = "";
 let userId = -1;
 let round = 30;
-let score = 0;
 let deck = [];
 let usedDeck = [];
 let voting = [];
@@ -31,7 +30,6 @@ const winnerDisp = $('#winnerDisp');
 let color = '#563d7c';
 
 //TODO
-//add disconnect check and remove from userlist
 //refactor majority of code
   //reduce global variables
   //get rid of local storage uses for joining (probably replace with mySQL post/get)
@@ -39,7 +37,6 @@ let color = '#563d7c';
     //pretty much anything that is done by the host atm
   //use destructuring in topCard.html() methods
   //clean up join game functions, add functions where necessary (overlap)
-  //fix score storage in DB
   //find a way to redo updateUser without nesting queries
 //Roadmap:
   //Phase 1:
@@ -244,7 +241,7 @@ function endGame() {
 }
 //a mostly useless function that displays the inital score on player joining
 function updateUserScore() {
-  scoreDisp.html(score)
+  scoreDisp.html("0")
 }
 //populates the user list from the database
 function getUserList() {

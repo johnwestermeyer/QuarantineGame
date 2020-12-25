@@ -1,5 +1,5 @@
-INSERT INTO categories (title) VALUES ("Most Likely To"),("Story Time"),("Scenarios");
-INSERT INTO cards(body,consequence,category) VALUES
+INSERT INTO Categories (title) VALUES ("Most Likely To"),("Story Time"),("Scenarios");
+INSERT INTO Cards(body,consequence,category) VALUES
 ("Who is most likely to contract covid?",1,1),
 ("Who is most likely to get covid and not tell anyone?",1,1),
 ("Who drank the most during covid?",1,1),
@@ -20,4 +20,3 @@ INSERT INTO cards(body,consequence,category) VALUES
 ("Hair salons are closed for business. Who takes the scissors into their own hands?",1,1),
 ("If you had to eat banana bread for the rest of quarantine, which player would you choose to bake it?",1,1),
 ("Who is most likely to use “Hey all you cool cats and kittens” as their new catch phrase?",1,1),
-("Time for a dare! Nominate one player for a TikTok dance challenge.",1,1);

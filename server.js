@@ -51,7 +51,10 @@ io.on('connection', function(socket){
   socket.on('startGame', input => {
     io.to(input.code).emit('startGameReturn', input.card);
   })
-
+  //chat message handling
+  socket.on('chatMessage', function(msg, user, col, code){
+    io.to(code).emit('chatMessageReturn', msg, user, col);
+  });
   //send vote
   socket.on('sendVote', input => {
     io.to(input.code).emit('userVoted', {user: input.user, vote:input.vote})

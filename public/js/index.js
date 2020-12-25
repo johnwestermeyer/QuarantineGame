@@ -9,10 +9,11 @@ $('.create').click(() => {
         avatar = "trash";
     }
     let name = userInput.val().trim();
+    let color = $('#color').val();
     let userArr = [];
     //make sure there is name value
     if(name){
-        userArr = [{name: name, avatar: avatar, score: 0}];
+        userArr = [{name: name, avatar: avatar, score: 0, color}];
         localStorage.setItem("newLobby", JSON.stringify(userArr));
         window.location.href = "/game";
     } else {
@@ -23,7 +24,8 @@ $('.create').click(() => {
 //join a Lobby button click
 $('.join').click(() => {
     let name = userInput.val().trim();
-    let avatar = imageInput.val();
+    let avatar = imageInput.val();    
+    let color = $('#color').val();
     if(avatar === "Choose Your Avatar"){
         avatar = "trash";
     }
@@ -34,7 +36,7 @@ $('.join').click(() => {
         alert("Lobby Code Required to Join a Lobby");       
     }else{ 
         if(name){
-        sentData = [{name: name, avatar: avatar, score: 0},lobbyCode];
+        sentData = [{name: name, avatar: avatar, score: 0, color},lobbyCode];
         localStorage.setItem("joinLobby", JSON.stringify(sentData));
         window.location.href = "/game";
     } else {

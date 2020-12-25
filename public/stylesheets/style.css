@@ -259,3 +259,21 @@ footer {
   height: 30px;
   position: fixed;
 }
+
+.chatBox { 
+  margin: 0; 
+  padding: 0; 
+  position: relative; 
+  right: 5rem;   
+  box-sizing: border-box; 
+  z-index: 3;}
+.chatBox .chatContents {height: 40rem;}
+.chatBox form { background: #222; padding: 1px; }
+.chatBox form input { border: 0; padding: 10px; width: 80%; margin-right: 0.5%; }
+.chatBox form button { width: 19%; background:#cee1f4; border: none; padding: 10px; }
+.chatBox #chatmessages { 
+  list-style-type: none; 
+  margin: 0; 
+  padding: 0;}
+.chatBox #chatmessages li { padding: 5px 10px; background: #fce0a2;}
+.chatBox #chatmessages li:nth-child(odd) { background: #eee; }

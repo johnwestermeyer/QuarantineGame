@@ -27,9 +27,22 @@ const lobbyDisp = $('#lobbyDisp');
 const topCard = $('.bg-card-3');
 const timerDisp = $('#countdown');
 const winnerDisp = $('#winnerDisp');
+let color = '#563d7c';
 
 //TODO
 //add disconnect check and remove from userlist
+//refactor majority of code
+  //reduce global variables
+  //get rid of local storage uses for joining (probably replace with mySQL post/get)
+  //move more functionality to server side (and try not to overwelm heroku)
+  //use destructuring in topCard.html() methods
+  //clean up join game functions, add functions where necessary (overlap)
+  //fix score storage in DB
+  //find a way to redo updateUser without nesting queries
+//Roadmap:
+  //mid-game QOL (pause, edit settings)
+  //more cards, import cards
+
 
 //new Lobby set up with
 function createGameLobby() {
@@ -229,7 +242,7 @@ function getUserList() {
     }
   });
 }
-//updates user list when any user after the host joins
+//updates user list when any user after the host joins; should probably be two functions
 function updateUser(newUser) {
   $.get(`/api/gameroom/${thisGameId}`, function(data, status) {
     userList = JSON.parse(data[0].user_list);
@@ -238,8 +251,10 @@ function updateUser(newUser) {
     let start = data[0].start;
     let userReturn = usernameCheck(newUser, userList);
     user = userReturn.name;
+    color = userReturn.color;
     userDisp.html(user);
     lobbyDisp.html(thisGameId);
+    //refactor into one if and statemnet
     if(!start){
         if (status === "success") {
             if (userList.length <= 8) {              
@@ -308,7 +323,8 @@ socket.on('connect', () => {
     userList = userArr;
     localStorage.removeItem("newLobby");
     myModal.show();
-    user = userArr[0].name;
+    user = userArr[0].name;    
+    color = userArr[0].color;
     userId = 0;
     userDisp.html(user);
     socketId = socket.id;
@@ -350,3 +366,22 @@ $(document).ready(function() {
     valueSpan.html(rounds.val());
   });
 });
+
+//chat functionality
+$(function () {
+  $('#chat').submit(function(e){
+    e.preventDefault(); // prevents page reloading
+    if($('#m').val()){      
+      socket.emit('chatMessage', $('#m').val(), user, color, thisGameId);
+      $('#m').val('');
+    }
+    return false;
+  });
+});
+//incoming chat messages
+socket.on('chatMessageReturn', function(msg, user, col){
+  let html = `<li><span style="color:${col}; font-weight: 700">${user}</span>: ${msg}</li>`;
+  $('#chatmessages').append(html);  
+  $('.chatContents').scrollTop($('.chatContents')[0].scrollHeight);
+});
+

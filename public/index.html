@@ -40,16 +40,28 @@
           <!-- Insert Header -->
           <h5 class="card-header">WELCOME TO THE QUARANTINE GAME!</h5>
             <div class="card-body">
+              <div class="row">
+                <div class="col-6">
               <!-- Text asking for username -->
               <h5 class="card-title">Enter a Username:</h5>
 
               <!-- Input box for username -->
-              <div class="input-group input-group-sm mb-3">
-                <div class="input-group-prepend">
-                  
+              
+              </div>
+              <div class="col-6">
+                <h5 class="card-title">Color Picker:</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="input-group input-group-sm mb-3">                 
                     
+                  <input type="text" id="username" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
-                <input type="text" id="username" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+              </div>
+              <div class="col-6">
+            <input type="color" class="form-control form-control-color" style="height: 31px; padding: 5px" id="color" value="#563d7c" title="Choose your color">
+              </div>
               </div>
 
               <!-- Title for Avatar -->

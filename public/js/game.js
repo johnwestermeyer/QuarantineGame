@@ -16,6 +16,7 @@ let consequence = 1;
 let roundsNumber = 0;
 let voteButtons = $('.voteBtn');  
 let timer = 0;
+let currentlyVoting = false;
 const sidePanel = $(".sidepanel")
 const valueSpan = $('.valueSpan');
 const rounds = $('#rounds');
@@ -35,13 +36,17 @@ let color = '#563d7c';
   //reduce global variables
   //get rid of local storage uses for joining (probably replace with mySQL post/get)
   //move more functionality to server side (and try not to overwelm heroku)
+    //pretty much anything that is done by the host atm
   //use destructuring in topCard.html() methods
   //clean up join game functions, add functions where necessary (overlap)
   //fix score storage in DB
   //find a way to redo updateUser without nesting queries
 //Roadmap:
-  //mid-game QOL (pause, edit settings)
-  //more cards, import cards
+  //Phase 1:
+    //mid-game QOL host options (pause, edit settings, end game)
+  //Phase 2:
+    //emotes?
+    //more cards, import cards
 
 
 //new Lobby set up with
@@ -85,6 +90,10 @@ function renderUser() {
     let placeholderHtml = `<p><img width="50px" height="50px" src='./images/avatar-icons/${userList[i].avatar}.png'>${userList[i].name} - Score: ${userList[i].score}
         <button type="button" id="${i}" class="voteBtn btn-danger">Vote</button></p>`
     sidePanel.append(placeholderHtml);
+  }
+  if(currentlyVoting){
+    voteButtons = $('.voteBtn');
+    voteButtons.attr("style", "display:inline-block");
   }
 }
 
@@ -148,6 +157,7 @@ function startGame(i){
 }
 //redefines voteButtons, then makes them visible
 function startVoting() {
+  currentlyVoting = true;
   voteButtons = $('.voteBtn');
   voteButtons.attr("style", "display:inline-block");
   timer = 30;
@@ -170,6 +180,7 @@ function countdownStart() {
 $(document).on("click", '.voteBtn', (function() {
   console.log("vote cast");
   var id = $(this).attr('id');
+  currentlyVoting = false;
   voteButtons.attr("style", "display:none");
   sendVote(id);
 }));
@@ -189,7 +200,8 @@ socket.on('userVoted', input => {
 })
 //ends the voting, clears the timer again (just in case), and tabulates the voting
 function endVoting() {
-  clearInterval(countdown);
+  clearInterval(countdown);  
+  currentlyVoting = false;
   let result = Array(userList.length).fill(0);
   voting.forEach(e => {
     result[e[1]]++;
@@ -202,13 +214,17 @@ function endVoting() {
 function announceWinner(result) {
   let i = result.indexOf(Math.max(...result));
   userList[i].score += consequence;
+  console.log(userList);
   if (i === userId) {
     scoreDisp.html(userList[i].score)
   }
   if (usedDeck.length === deck.length) {
     usedDeck = [];
   }
-  renderUser();
+  if(userId === 0){
+    let input = JSON.stringify(userList)
+    updateUserList(input);
+  }
   topCard.html(`<h4 class="round-winner">${userList[i].name} receives </h4> <h4 class="in-game-cons">${consequence} ${cons}</h4>`)
   setTimeout(() => {
     if (userId === 0) {
@@ -262,16 +278,7 @@ function updateUser(newUser) {
                 userList.push(userReturn);
                 userId = userList.length - 1;
                 let input = JSON.stringify(userList);
-                $.ajax({
-                  url: `/api/gameroom/user/${thisGameId}`,
-                  type: 'PUT',
-                  data: {
-                      users: input
-                  },
-                  success: function(data, status) {
-                      socket.emit('renderUser', thisGameId);
-                  }
-                });
+                updateUserList(input);
             } else {
                 errorJoin();
                 };
@@ -287,6 +294,19 @@ function errorJoin(){
     <p class="lobby-full">This game is either full or your friends have started without you.</p> 
     <h4 class="text-center"><a href="/" class="go-back">Go Back</a></h4>`)
 }
+//Update user list API Put
+function updateUserList(input){
+  $.ajax({
+    url: `/api/gameroom/user/${thisGameId}`,
+    type: 'PUT',
+    data: {
+        users: input
+    },
+    success: function(data, status) {
+        socket.emit('renderUser', thisGameId);
+    }
+  })
+;}
 
 //checks to make sure usernames are unique
 function usernameCheck(user, userList) {
@@ -384,4 +404,15 @@ socket.on('chatMessageReturn', function(msg, user, col){
   $('#chatmessages').append(html);  
   $('.chatContents').scrollTop($('.chatContents')[0].scrollHeight);
 });
-
+//server lets us know a user has disconncted
+socket.on('disconnectedUser', function(user){  
+  let i = userList.findIndex(e => e.socket === user);
+  if(userId > i){ userId--};  
+  $($('.sidepanel p')[i]).wrap('<div id="disconnect"></div>');    
+  $('#disconnect').remove('button');
+  if(userId === 0){
+    userList.splice(i,1);
+    let userString = JSON.stringify(userList);
+    updateUserList(userString);
+  }
+});

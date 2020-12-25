@@ -58,5 +58,10 @@ io.on('connection', function(socket){
   //send vote
   socket.on('sendVote', input => {
     io.to(input.code).emit('userVoted', {user: input.user, vote:input.vote})
-  })
+  });
+  //alert other room members
+  socket.on('disconnecting', function () {
+        let room = Array.from(socket.rooms)[1];
+        io.to(room).emit('disconnectedUser', socket.id)
+  });
 });

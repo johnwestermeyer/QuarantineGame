@@ -277,3 +277,14 @@ footer {
   padding: 0;}
 .chatBox #chatmessages li { padding: 5px 10px; background: #fce0a2;}
 .chatBox #chatmessages li:nth-child(odd) { background: #eee; }
+
+#disconnect{
+  background-color: rgba(68, 68, 68, 0.2);
+  z-index: 4;
+}
+#disconnect p{
+  opacity: .5;
+}
+#disconnect img{
+  opacity: .5;
+}

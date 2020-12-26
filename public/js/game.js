@@ -3,6 +3,8 @@
 const socket = io();
 let userList = [];
 let user = "";
+let socketId = "";
+let color = '#563d7c';
 let userId = -1;
 let round = 30;
 let deck = [];
@@ -10,7 +12,6 @@ let usedDeck = [];
 let voting = [];
 let cons = "points";
 let thisGameId = "";
-let socketId = "";
 let consequence = 1;
 let roundsNumber = 0;
 let voteButtons = $('.voteBtn');  
@@ -27,9 +28,10 @@ const lobbyDisp = $('#lobbyDisp');
 const topCard = $('.bg-card-3');
 const timerDisp = $('#countdown');
 const winnerDisp = $('#winnerDisp');
-let color = '#563d7c';
 
 //TODO
+//voting overhaul
+//security measures
 //refactor majority of code
   //reduce global variables
   //get rid of local storage uses for joining (probably replace with mySQL post/get)
@@ -197,7 +199,7 @@ socket.on('userVoted', input => {
 })
 //ends the voting, clears the timer again (just in case), and tabulates the voting
 function endVoting() {
-  clearInterval(countdown);  
+  clearInterval(countdown);
   currentlyVoting = false;
   let result = Array(userList.length).fill(0);
   voting.forEach(e => {
@@ -210,19 +212,43 @@ function endVoting() {
 //tie breaker goes to whoever is earliest in the index (sorry host)
 function announceWinner(result) {
   let i = result.indexOf(Math.max(...result));
-  userList[i].score += consequence;
-  console.log(userList);
-  if (i === userId) {
-    scoreDisp.html(userList[i].score)
-  }
+  if(result.includes(result[i],i+1) === true){
+    let j = result.indexOf(result[i],i+1);
+    if(result.includes(result[j],j+1) === true){
+      //more than 2 tied votes
+      topCard.html(`<h4 class="round-winner">No winners this round</h4>`)
+    } else{
+      //tie winners
+      topCard.html(`<h4 class="round-winner">${userList[i].name} receives </h4> <h4 class="in-game-cons">${consequence} ${cons}</h4>
+      <h4 class="round-winner">${userList[j].name} receives </h4> <h4 class="in-game-cons">${consequence} ${cons}</h4>`)
+      userList[j].score += consequence;
+      userList[i].score += consequence;
+      if (i === userId) {
+        scoreDisp.html(userList[i].score)
+      }
+      if (j === userId) {
+        scoreDisp.html(userList[j].score)
+      }
+      if(userId === 0){
+        let input = JSON.stringify(userList)
+        updateUserList(input);
+      }
+    }
+  } else{    
+    //maybe turn some of this into a function for the above conditionsm
+    userList[i].score += consequence;
+    if (i === userId) {
+      scoreDisp.html(userList[i].score)
+    }
+    if(userId === 0){
+      let input = JSON.stringify(userList)
+      updateUserList(input);
+    }
+    topCard.html(`<h4 class="round-winner">${userList[i].name} receives </h4> <h4 class="in-game-cons">${consequence} ${cons}</h4>`)
+  } 
   if (usedDeck.length === deck.length) {
     usedDeck = [];
-  }
-  if(userId === 0){
-    let input = JSON.stringify(userList)
-    updateUserList(input);
-  }
-  topCard.html(`<h4 class="round-winner">${userList[i].name} receives </h4> <h4 class="in-game-cons">${consequence} ${cons}</h4>`)
+  }  
   setTimeout(() => {
     if (userId === 0) {
       startGameHost();

@@ -19,4 +19,4 @@ INSERT INTO Cards(body,consequence,category) VALUES
 ("Which player orders takeout when they have food at home?",1,1),
 ("Hair salons are closed for business. Who takes the scissors into their own hands?",1,1),
 ("If you had to eat banana bread for the rest of quarantine, which player would you choose to bake it?",1,1),
-("Who is most likely to use “Hey all you cool cats and kittens” as their new catch phrase?",1,1),
+("Who is most likely to use “Hey all you cool cats and kittens” as their new catch phrase?",1,1)

@@ -28,9 +28,9 @@ const lobbyDisp = $('#lobbyDisp');
 const topCard = $('.bg-card-3');
 const timerDisp = $('#countdown');
 const winnerDisp = $('#winnerDisp');
+let color = '#563d7c';
 
 //TODO
-//voting overhaul
 //security measures
 //refactor majority of code
   //reduce global variables
@@ -39,13 +39,18 @@ const winnerDisp = $('#winnerDisp');
     //pretty much anything that is done by the host atm
   //use destructuring in topCard.html() methods
   //clean up join game functions, add functions where necessary (overlap)
-  //find a way to redo updateUser without nesting queries
 //Roadmap:
   //Phase 1:
     //mid-game QOL host options (pause, edit settings, end game)
   //Phase 2:
     //emotes?
     //more cards, import cards
+  //use destructuring in topCard.html() methods
+  //clean up join game functions, add functions where necessary (overlap)
+  //find a way to redo updateUser without nesting queries
+//Roadmap:
+  //mid-game QOL (pause, edit settings)
+  //more cards, import cards
 
 
 //new Lobby set up with
@@ -438,4 +443,4 @@ socket.on('disconnectedUser', function(user){
     let userString = JSON.stringify(userList);
     updateUserList(userString);
   }
-});
+

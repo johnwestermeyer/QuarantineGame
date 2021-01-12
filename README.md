@@ -23,7 +23,7 @@ The 2020 card game, made to enjoy with others virtually.
 
 * Once the game begins, all players will have 30 seconds to vote for the player of your choice. The player who receives the most votes will incur the consequence!
 ## Demo
-* Deployed at: [https://gentle-cliffs-28390.herokuapp.com/](https://gentle-cliffs-28390.herokuapp.com/)
+* Deployed at: [https://calm-crag-81636.herokuapp.com/](https://calm-crag-81636.herokuapp.com/)
 ## Screenshots
 ![indexpage.png](./public/images/screenshots/indexpage.png "index page")
 ![gamepage.png](./public/images/screenshots/gamepage.png "game page")
